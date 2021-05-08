@@ -1,0 +1,248 @@
+{% extends 'home/base.html' %}
+
+
+<!Doctype Html>
+<html>
+{% block content %}
+<head>
+<title>MECHFINDER </title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap" rel="stylesheet">
+<style>
+
+/*Navbar styling*/
+
+
+  #sideNav{
+  width:250px;
+  height:100vh;
+  position:fixed;
+  right:-250px;
+  top:0;
+  background:#000;
+  z-index:2;
+  transition:0.5s;
+  color:#fff;
+  }
+  nav ul li{
+  list-style:none;
+  margin:50px 20px;
+  }
+  nav ul li a{
+  text-decoration:none;
+  color:#fff;
+  }
+  #menuBtn{
+  width:50px;
+  height:50px;
+  background:#000;
+  text-align:center;
+  position:fixed;
+  right:30px;
+  top:20px;
+  border-radius:3px;
+  z-index:3;
+  cursor:pointer;
+  }
+  #menuBtn img{
+  width:20px;
+  margin-top:15px;
+  }
+
+
+  #homepage {
+    background-image: linear-gradient(rgba(0,0,0,0),#000),url(https://images.pexels.com/photos/210881/pexels-photo-210881.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);
+    background-size:cover;
+    background-position:center;
+    background-repeat: no-repeat;
+    height:100vh;
+  }
+  .logo img{
+   padding-left: 20px;
+   height:auto;
+   float:left;
+   width: 500px;
+   padding-top:20px;
+  }
+  .txt{
+   text-align:center;
+   colour:#fff;
+   padding-top:160px;
+  }
+  .txt h1{
+   font-size:60px;
+   font-family:'Abril Fatface', cursive;
+   color:#fff;
+  }
+  .txt p{
+   font-size:30px;
+   font-family:'Abril Fatface', cursive;
+   color:#fff;
+   padding-top:1px;
+  }
+
+  .login_signup_btns {
+    padding: 20px;
+  }
+
+/*feature styling*/
+
+#feature {
+  background-image:linear-gradient(rgba(0,0,0,0),#000);
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-position:center;
+  padding: 100px;
+  margin: 0;
+  min-height: 100vh;
+}
+.specifications{
+ text-align:center;
+ colour:#fff;
+}
+.specifications h1{
+ text-align:center;
+ font-size:60px;
+ font-family:'Abril Fatface', cursive;
+ color:#000;
+}
+.specifications p{
+ text-align:center;
+ font-size:30px;
+ font-family:'Abril Fatface', cursive;
+ color:#000;
+}
+.features-img {
+  margin: auto;
+  height:50px !important;
+  text-align:center;
+  vertical-align:middle;
+  cursor:pointer;
+  font-size:15px;
+  margin:4px 2px;
+  width:50px;
+}
+.features-img-div {
+  margin: 30px;
+}
+
+.feature-span {
+  margin-left: 15px;
+}
+
+
+@media only screen and (max-width: 600px) {
+    .logo img{
+     height:auto;
+     float:left;
+     width: 250px;
+     padding-top:20px;
+    }
+    #menuBtn {
+      width:50px;
+      height:50px;
+      right: 15px;
+      top: 10px;
+    }
+
+}
+
+</style>
+</head>
+
+{% if not user.is_authenticated %}
+<body>
+<section id="homepage">
+  <div class="txt container">
+    <div>
+      <h1>Find a Mechanic</h1>
+      <p>At Anytime, Anywhere</p>
+    </div>
+    <div class="login_signup_btns">
+      <a href="{% url 'signupuser' %}"><button class="btn btn-outline-light btn-lg mr-5" name="get_started_btn">Get Started</button></a>
+      <a href="{% url 'loginuser' %}"><button class="btn btn-outline-light btn-lg" name="login_btn">Login</button></a>
+    </div>
+  </div>
+</section>
+
+<section id="feature">
+<div class="specifications">
+ <h1>FEATURES</h1>
+ <p>We Provide You</p>
+<div class="features-img-div">
+  <img height="50px" class="features-img" src="https://i.ibb.co/VqygbNf/switch-on.png">
+  <span class="feature-span">  Mechanic availability toggle</span><br>
+</div>
+<div class="features-img-div">
+  <img class="features-img" src="https://i.ibb.co/LtC2Kt2/mechanic.png">
+  <span class="feature-span">  Mechanics profile with ratings & reviews</span><br>
+</div>
+<div class="features-img-div">
+  <img class="features-img" src="https://i.ibb.co/YXc7QKG/placeholder.png">
+  <span class="feature-span">  Live location & tracking</span><br>
+</div>
+<div class="features-img-div">
+  <img class="features-img" src="https://i.ibb.co/ZHHkD30/user.png">
+  <span class="feature-span">  Profile setup</span><br>
+</div>
+<div class="features-img-div">
+  <img class="features-img" src="https://i.ibb.co/Kx2TPWp/accept.png">
+  <span class="feature-span">  Accept or Reject requests</span>
+</div>
+</div>
+</section>
+
+
+
+
+</body>
+{% endif %}
+{% endblock %}
+</html>
+
+
+
+<!--NavBar-->
+<!--
+<div id="sideNav">
+<nav>
+<ul>
+ <li><a href="#">HOME</a></li>
+ <li><a href="#">SERVICES</a></li>
+ <li><a href="#">FEATURES</a></li>
+ <li><a href="#">CONTACTS</a></li>
+ <li><a href="#">FAQ</a></li>
+ <li><a href="#">ABOUT US</a></li>
+</ul>
+</nav>
+</div>
+
+<div id= "menuBtn">
+<img src="https://www.iconsdb.com/icons/preview/white/menu-4-xl.png"  id="MENUS">
+</div>
+
+<script>
+var menuBtn = document.getElementById("menuBtn")
+var sideNav = document.getElementById("sideNav")
+var MENUS= document.getElementById("MENUS")
+
+sideNav.style.right="-250px";
+
+ MENUS.onclick = function(){
+  if(sideNav.style.right == "-250px"){
+      sideNav.style.right = "0px";
+      document.getElementById("MENUS").src = "https://www.iconsdb.com/icons/preview/white/x-mark-xxl.png";
+  }
+  else{
+     sideNav.style.right = "-250px";
+     document.getElementById("MENUS").src = "https://www.iconsdb.com/icons/preview/white/menu-4-xl.png";
+     }
+}
+</script>
+-->

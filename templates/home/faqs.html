@@ -1,0 +1,129 @@
+
+{% extends 'home/base.html' %}
+
+{% block content %}
+<!Doctype Html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<title>about us</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+    *{
+      box-sizing: border-box;
+      transition: 0.25s;
+    }
+    body{
+      background-repeat: no-repeat;
+      background-size:cover;
+      background-position:center;
+
+      font: 18px/1.5 system-ui, sans-serif;
+      padding: 0 2rem;
+     /** background: #000E; */
+    }
+    h1{
+      text-align: center;
+      font-size: 3rem;
+      padding-bottom: 0.25em;
+      border-bottom: 5px solid silver;
+      border-image: linear-gradient(to right, transparent 20%, darkslategrey, transparent 80%)30;
+      color:#3CB6D0;
+    }
+/*** Specific styles ***/
+    details{
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid darkslategray;
+    }
+    summary{
+      list-style-type: '✔  ';
+      font-size: 1.25rem;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      outline: none;
+      color: darkslategray;
+    }
+    summary::after{
+      content: "\25BC";
+      padding: 0.5rem;
+      position: absolute;
+      right: 0.25rem;
+      top: -0.5rem;
+      color: #E776F6;
+    }
+    details[open]{
+      background: #F9DC89;
+    }
+  details[open] summary{
+    color: dimgrey;
+  }
+    details[open] summary::after{
+      content: "\25B2";
+    }
+/*** End specific styles ***/
+    p{
+      color: dimgrey;
+      letter-spacing: 1.5;
+    }
+
+</style>
+
+
+</head>
+
+<body>
+  <h1>Frequently Asked Questions</h1>
+  <br>
+   <details>
+     <summary>How do I change my password?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+   <details>
+     <summary>How do I sign up?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+   <details>
+     <summary>How do reviews work?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+  <details>
+     <summary>How do I send a request?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+   <details>
+     <summary>How do I contact customer care?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+   <details>
+     <summary>?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+   <details>
+     <summary>HOW DO I DO NOTHING!?</summary>
+     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+   </details>
+
+</body>
+</html>
+{% endblock %}
+
+
+
+
+
+
+
+
+<!---###########################################-->

@@ -1,0 +1,74 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<!Doctype Html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<title>about us</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+ margin:0;
+ padding:0;
+ background-image:url(https://images.unsplash.com/photo-1546706872-9c90b8d0c94f?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1950&q=80);
+ width:100%;
+ background-size:cover;
+ background-position:center;
+ background-repeat: no-repeat;
+}
+.header{
+
+}
+
+
+
+.about{
+border:1px white solid;
+width:70%;
+background:rgba(0,0,0,0.7);
+color:#ffffff;
+font-family:'Pacifico', cursive;
+font-size:22px;
+text-align:center;
+margin:50px 0px;
+padding:15px;
+
+}
+
+@media only screen and (max-width: 500px){
+
+.header{
+  width:auto;
+}
+
+.about{
+  margin-top:50px;
+  width:70%;
+}
+
+}
+
+
+</style>
+</head>
+<body>
+  <center>
+<div class="header">
+<div class="about">
+<h1>About Us</h1>
+<p>MechFinder motive is to connect near by Mechanics and Users. This allows user to sends out request that he needs help
+  and whoever the mechanic is available in that vicinity could accept the request and come up to fix the problem.
+  MechFinder is working towards making your vehicle service more convinent and reliable. Now keep your worries out
+  because we are here to provide you 24X7 services. We believe in building trust by providing high quality service.
+  Our service is key to a fresh start. Take a moment and add more life to your vehicle. Let's put you back in your driver
+  seat and make you feel the pleasure of quality autowork with care, fast and fair at a reasonable price.
+</p>
+</div>
+</div>
+</center>
+</body>
+</html>
+{% endblock %}

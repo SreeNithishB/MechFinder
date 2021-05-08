@@ -1,0 +1,160 @@
+{% extends 'home/base.html' %}
+
+<!DOCTYPE html>
+{% block content %}
+
+<html>
+
+<head>
+  <title>Login</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+
+<style>
+
+{% load static %}
+
+body{
+  background-image: url('{% static "/home/signupimg.png" %}');
+}
+
+#error{
+  font-size: 20px;
+  font-weight: 600;
+  color:black !important;
+}
+
+#ques{
+  color:white;
+  font-size:20px;
+}
+
+#formdiv{
+  background-image: url('{% static "/home/signupdiv.jpg" %}');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: auto;
+  background-color:#e6e6e6;
+  padding:20px;
+  margin: -10px 20px 20px 20px;
+  border-radius:15px;
+  color:white;
+  font-size:15px;
+}
+
+#signupbtn{
+  padding:20px;
+}
+
+#hr-id{
+  width:400px;
+  height:.5px;
+  background-color:orange;
+  border-style: inset;
+}
+
+#signinbtn a{
+  color:orange;
+  text-decoration:none;
+}
+
+#signinbtn a:hover{
+  color:orange;
+  padding-bottom: 15px;
+  border-bottom-style: solid;
+  border-bottom-width: 3.3px;
+  width: fit-content;
+  padding-bottom: 5px;
+}
+
+lable{
+  width:400px;
+  display:inline-block;
+  text-align:right;
+}
+
+#conditions{
+  margin-top: -10px;
+  width:70%;
+  text-align: left;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 500px) {
+
+  lable{
+    width:90%;
+    padding-left:0;
+    margin-left: 0;
+    display:inline-block;
+    text-align:right;
+  }
+
+  #formdiv{
+    background-color:#e6e6e6;
+    padding: 20px 0px;
+    margin: 20px 0px;
+    width:auto;
+    border-radius:15px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+<center>
+
+<div class="container" id="formdiv">
+  <h1><span style="color:#904F02; font-family:Apple Chancery, cursive" class="text-default"><b style="margin:10px;">Sign Up</b></span></h1>
+  <p></p>
+  <p id="error"><i>{{ error }}</i></p>
+<form method="POST" action="">
+  {% csrf_token %}
+  <p><lable>Username : {{ form1.username }}</lable></p>
+  <p><lable>Password : {{ form1.password1 }}</lable></p>
+  <p><lable>Confirm password : {{ form1.password2 }}</lable></p>
+  <div class="container" id="conditions">
+    <div class="row">
+    <div class="hidden-sm hidden-md hidden-xs col-lg-4" id="empty"></div>
+    <div class="well col-lg-8 " id="actual">
+      <ul>
+        <li class="text-faded">Password must have atleast 8 characters</li>
+        <li class="text-faded">Password must contain atleast one digit</li>
+        <li class="text-faded">Password must contain atleast one uppercase letter</li>
+        <li class="text-faded">Password must contain atleast one special character</li>
+      </ul>
+    </div>
+  </div>
+  </div>
+  <p><lable>First name : {{ form2.firstname }}</lable></p>
+  <p><lable>Last name : {{ form2.lastname }}</lable></p>
+  <p><lable>Email id : {{ form2.email }}</lable></p>
+  <p><lable>Phone Number : {{ form2.phone }}</lable></p>
+  <p>Are you a mechanic : {{ form2.isMech }}</p>
+
+
+  <button class="btn btn-primary" type="submit">Sign Up</button>
+</form>
+</div>
+<hr id="hr-id">
+<div style="margin-bottom:30px">
+<h2 id="signinbtn"><span id="ques">Already have an account ? </span><a href="{% url 'loginuser' %}"> Sign In</a></h2>
+</div>
+</center>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

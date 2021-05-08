@@ -1,0 +1,298 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <title>MECHFINDER</title>
+
+    <style>
+      #latitude_id {
+        display: none;
+      }
+      #longitude_id {
+        display: none;
+      }
+      #name_AskHelpForm {
+        display: none;
+      }
+      #email_AskHelpForm {
+        display: none;
+      }
+      #contact_no_AskHelpForm {
+        display: none;
+      }
+      #userName_AskHelpForm {
+        display: none;
+      }
+      #cancel-btn {
+        border-radius: 0;
+      }
+      #cancel_request_form {
+        display: none;
+      }
+      #waiting_statement {
+        display: none;
+      }
+      #get_details_for_feedback_form {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shadow-lg p-3 mb-10 bg-white rounded wow animate__fadeIn">
+      <h5> Hi, {{fullname}} 👋</h5>
+    </div>
+
+    <form id="cancel_request_form" action="" method="post">
+      {% csrf_token %}
+      <label for="cancel_request"></label>
+      <input type="text" name="cancel_request" id="cancel_request">
+    </form>
+
+    <form id="get_details_for_feedback_form" action="" method="post">
+      {% csrf_token %}
+      <label for="is_feedback"></label>
+      <input type="text" name="is_feedback" id="is_feedback">
+      {{ get_details_for_feedback }}
+    </form>
+
+    <div style="margin-top:50px;"class="container">
+
+      <div>
+        <div id="customer_help"></div>
+      </div>
+
+      <div>
+        <h4 id="waiting_statement">wait till we find someone for you...      <img class='wow animate__pulse  animate__infinite' width='30' src='https://i.ibb.co/HKH4tyY/loupe.png'></h4>
+        <button style="display: {{ display_cancel_btn }}; margin-bottom:20px;" type="button" id="cancel-btn" class="btn btn-outline-danger" onClick="cancel_request()" name="cancel_btnn">Cancel Request</button>
+      </div>
+
+      {{ map|safe }}
+
+      <form style="display: {{ display_lat_lon_form }}" id="lat_lon_form" action="" method="post">
+        <h5 style="color:orange"> Having trouble with the vehicle? Let's send a request to find a mechanic ...</h5>
+        {% csrf_token %}
+        {{ form }}
+        {{ ask_help_form.as_p }}
+        <button class="btn btn-outline-success" onclick="getLocation()" name="button">Send Request</button>
+      </form>
+    </div>
+
+    <br>
+    <br>
+
+    <br>
+    <br>
+
+
+    <script type="text/javascript">
+
+      var socket = new WebSocket('ws://localhost:8000/ws/customer_help_url/');
+      var data;
+      socket.onmessage = function(event) {
+        {% if map %}
+        document.getElementById("cancel-btn").style.display = 'block';
+        document.getElementById("waiting_statement").style.display = 'block';
+        {% endif %}
+
+        data = JSON.parse(event.data);
+        console.log(data);
+
+        var content = ""
+        var i
+        var avg_rating = 0
+        for (i = data.message.length-1; i >= 0; i--) {
+
+          if(data.message[i].customer_name == "{{ userName }}") {
+
+            content = content + '<div class="shadow-lg p-3 mb-5 bg-white rounded wow animate__fadeIn">' + '<h5>' + data.message[i].mechanic_name + " | " + data.message[i].email + '</h5>' + 'Rating: <span id=stars></span>' + '<br>' + '<br>' + '<br>' + '+91 ' + data.message[i].contact_no  + "</div>"
+            document.getElementById("cancel-btn").style.display = 'none';
+            document.getElementById("waiting_statement").style.display = 'none';
+
+            avg_rating = data.message[i].avg_rating
+
+            break;
+          } else {
+            document.getElementById("cancel-btn").style.display = 'block';
+            document.getElementById("waiting_statement").style.display = 'block';
+          }
+        }
+        if(content != "") {
+          content = "<h1>You're currently connected with,</h1>" + content;
+          document.getElementById("waiting_statement").style.display = 'none';
+
+        } else {
+
+        }
+
+        document.querySelector('#customer_help').innerHTML = content;
+        if(content != "") {
+          document.querySelector("#stars").innerHTML = getStars(avg_rating);
+        }
+
+      }
+      socket.onclose = function(){
+        console.log('closed!');
+        //reconnect now
+      }
+
+      function getStars(rating) {
+
+        // Round to nearest half
+        rating = Math.round(rating * 2) / 2;
+        let output = [];
+
+        // Append all the filled whole stars
+        for (var i = rating; i >= 1; i--)
+          output.push('<i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+        // If there is a half a star, append it
+        if (i == .5) output.push('<i class="fa fa-star-half-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+        // Fill the empty stars
+        for (let i = (5 - rating); i >= 1; i--)
+          output.push('<i class="fa fa-star-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+        return output.join('');
+
+      }
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        document.getElementById('latitude_id').value = position.coords.latitude;
+        document.getElementById('longitude_id').value = position.coords.longitude;
+        document.getElementById('name_AskHelpForm').value = "{{ name }}";
+        document.getElementById('userName_AskHelpForm').value = "{{ userName }}";
+        document.getElementById('email_AskHelpForm').value = "{{ email }}";
+        document.getElementById('contact_no_AskHelpForm').value = "{{ phone }}";
+
+        document.getElementById('name_AskHelpForm').value = "{{ name }}";
+        document.getElementById('userName_AskHelpForm').value = "{{ userName }}";
+        document.getElementById('email_AskHelpForm').value = "{{ email }}";
+        document.getElementById('contact_no_AskHelpForm').value = "{{ phone }}";
+
+
+        document.getElementById("lat_lon_form").submit();
+
+      }
+
+      function cancel_request() {
+        console.log('{{ userName }}');
+        document.getElementById('cancel_request').value = 'YES';
+        document.getElementById('cancel_request_form').submit()
+      }
+
+      var wow = new WOW(
+        {
+          boxClass:     'wow',      // animated element css class (default is wow)
+          animateClass: 'animate__animated', // animation css class (default is animated)
+          offset:       0,          // distance to the element when triggering the animation (default is 0)
+          mobile:       true,       // trigger animations on mobile devices (default is true)
+          live:         true,       // act on asynchronously loaded content (default is true)
+          callback:     function(box) {
+            // the callback is fired every time an animation is started
+            // the argument that is passed in is the DOM node being animated
+          },
+          scrollContainer: null // optional scroll container selector, otherwise use window
+        }
+      );
+      wow.init();
+
+    </script>
+
+    <script type="text/javascript">
+      var socket = new WebSocket('ws://localhost:8000/ws/customer_helps_finished/');
+      var data;
+      var currentdate = new Date();
+      var max_elapse_time = 1;
+      socket.onmessage = function(event) {
+
+        data = JSON.parse(event.data);
+        console.log(data);
+
+        var i
+        for (i = data.message.length-1; i >= 0; i--) {
+
+
+          if(data.message[i].customer_name == "{{ userName }}") {
+
+
+
+            var str = data.message[i].created;
+            var res = str.split("T");
+            var result = res[1].split(":");
+
+            var gmtDateTime = moment.utc(res[0] + ' ' + res[1], "YYYY-MM-DD HH:mm")
+            var local = gmtDateTime.local().format('YYYY-MM-DD HH:mm');
+
+            var created_IST = local.split(' ')[1]
+            var created_date_split = local.split('-')
+
+            var created_IST_split = created_IST.split(":");
+            var created_hours = parseInt(created_IST_split[0]);
+            var created_minutes = parseInt(created_IST_split[1]);
+            var created_year = parseInt(created_date_split[0]);
+            var created_month = parseInt(created_date_split[1]);
+            var created_date = parseInt(created_date_split[2]);
+
+            var current_year = currentdate.getFullYear();
+            var current_month = currentdate.getMonth() + 1;
+            var current_date = currentdate.getDate();
+            var current_hours = currentdate.getHours();
+            var current_minutes = currentdate.getMinutes();
+
+            //console.log(created_year, created_month, created_date, created_hours, created_minutes);
+            if(!data.message[i].is_feedback_given && created_year == current_year && created_month == current_month && created_date == current_date && created_hours == current_hours && (created_minutes + max_elapse_time) > current_minutes) {
+              console.log("Add Feedback!");
+
+
+              document.getElementById('is_feedback').value = 'YES';
+              document.getElementById('customer_name_GetDetailsForFeedback').value = data.message[i].customer_name;
+              document.getElementById('mechanic_name_GetDetailsForFeedback').value = data.message[i].mechanic_name;
+              document.getElementById('email_GetDetailsForFeedback').value = data.message[i].email;
+              document.getElementById('customer_email_GetDetailsForFeedback').value = data.message[i].customer_email;
+              document.getElementById('contact_no_GetDetailsForFeedback').value = data.message[i].contact_no;
+              document.getElementById('customer_contact_no_GetDetailsForFeedback').value = data.message[i].customer_contact_no;
+
+              document.getElementById('get_details_for_feedback_form').submit()
+
+              // USE THIS AREA TO DO OPERATIONS FOR FEEDBACK
+              // TODO: Redirect to feedbackpage
+
+
+              break;
+            }
+
+          }
+        }
+
+      }
+      socket.onclose = function(){
+        console.log('closed!');
+        //reconnect now
+      }
+
+    </script>
+  </body>
+</html>
+
+{% endblock %}

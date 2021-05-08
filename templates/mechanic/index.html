@@ -1,0 +1,279 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>MECHFINDER | Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <style media="screen">
+      #dashboard {
+        padding-top: 60px;
+      }
+      #direction_form {
+        display: none;
+      }
+      #help_form {
+        display: none;
+      }
+      #caughtup_statement {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body onload="check_for_googlemaps()">
+    <div class="shadow-lg p-3 mb-10 bg-white rounded wow animate__fadeIn">
+      <h5 style="text-align=left"> Hi, {{fullname}} 👋<span style="float: right; text-align=right" ><b>Rating: <span id=stars></span></b></span></h5>
+
+    </div>
+
+    <h1 id="caughtup_statement" > No Orders Left! Time for a coffee ☕ </h1>
+
+    <div class="container">
+      <div id="dashboard"></div>
+    </div>
+
+    <form id="direction_form" action="" method="post">
+        {% csrf_token %}
+        {{ direction_form }}
+        <label for="cust_lat_dir"></label>
+        <input type="text" name="cust_lat_dir" id="cust_lat_dir">
+        <label for="cust_lon_dir"></label>
+        <input type="text" name="cust_lon_dir" id="cust_lon_dir">
+    </form>
+    <form id="help_form" action="" method="post">
+        {% csrf_token %}
+        {{ help_form }}
+    </form>
+
+    <form id="help_form" action="" method="post">
+        {% csrf_token %}
+        {{ help_form }}
+    </form>
+
+
+    <script type="text/javascript">
+      //connecting the websockets
+      var socket = new WebSocket('ws://localhost:8000/ws/mechanic_dashboard_url/');
+      var data;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+
+      function showPosition(position) {
+        mech_lat = position.coords.latitude;
+        mech_lon = position.coords.longitude;
+
+        window.socket.onmessage = function(event) {
+
+          window.data = JSON.parse(event.data);
+          console.log(data);
+
+          var content = ""
+          var i
+          var distance;
+          for (i = window.data.message.length-1; i >= 0; i--) {
+            distance = getDistance(mech_lat, mech_lon, window.data.message[i].latitude, window.data.message[i].longitude)
+            if(distance <= 500000) {
+              content = content + '<div class="shadow-lg p-3 mb-5 bg-white rounded wow animate__fadeIn">' + '<h5>' + window.data.message[i].name + " | " + window.data.message[i].email + '</h5>' + window.data.message[i].description + '<br><br>' + '+91 ' + window.data.message[i].contact_no + '<br><br><button style="margin-right: 7px; border-radius: 0;" type="button" class="btn btn-outline-success" onClick="accept_click()" id=' + i.toString() + '>Accept</button>' + '<button  style="margin-left: 7px; border-radius: 0;" type="button" class="btn btn-outline-success direction-button" onClick="directions_click()" id=' +  i.toString() + '>Get Directions</button>' + "</div>"
+            }
+          }
+          if(content != "") {
+            document.getElementById("caughtup_statement").style.display = 'none';
+          } else {
+            document.getElementById("caughtup_statement").style.display = 'block';
+          }
+          document.querySelector('#dashboard').innerHTML = content;
+
+        }
+        window.socket.onclose = function(){
+          console.log('closed!');
+          //reconnect now
+        }
+
+      }
+
+      function showError(error) {
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+          case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+          case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+          case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+        }
+      }
+
+      //calculating distance between customer and mechanic
+      function getDistance(lat1, lon1, lat2, lon2)
+      {
+        var R = 6371; // km
+        var dLat = toRad(lat2-lat1);
+        var dLon = toRad(lon2-lon1);
+        var lat1 = toRad(lat1);
+        var lat2 = toRad(lat2);
+
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var d = R * c;
+        return d;
+      }
+
+      // Converts numeric degrees to radians
+      function toRad(Value)
+      {
+          return Value * Math.PI / 180;
+      }
+
+
+
+
+      function accept_click()
+      {
+          // event.target is the element that is clicked (button in this case).
+          console.log(event.target.id);
+          console.log(data.message[parseInt(event.target.id)].name);
+          console.log(data.message[parseInt(event.target.id)].email);
+
+          document.getElementById('customer_name_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].user_name;
+          document.getElementById('mechanic_name_HelpsReceivedForm').value = "{{ userName }}";
+          document.getElementById('email_HelpsReceivedForm').value = "{{ email }}";
+          document.getElementById('customer_email_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].email;
+          document.getElementById('contact_no_HelpsReceivedForm').value = "{{ phone }}";
+          document.getElementById('customer_contact_no_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].contact_no;
+          document.getElementById('customer_description_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].description;
+          document.getElementById('customer_latitude_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].latitude;
+          document.getElementById('customer_longitude_HelpsReceivedForm').value = data.message[parseInt(event.target.id)].longitude;
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              alert("Geolocation is not supported by this browser.");
+          }
+
+          function showPosition(position) {
+
+            lat = position.coords.latitude;
+            lat = lat.toString();
+            lon = position.coords.longitude;
+            lon = lon.toString();
+            console.log(lon);
+
+            document.getElementById('latitude_HelpsReceivedForm').value = lat;
+            document.getElementById('longitude_HelpsReceivedForm').value = lon;
+
+            document.getElementById("help_form").submit();
+          }
+
+      }
+
+      function directions_click()
+      {
+          // event.target is the element that is clicked (button in this case).
+          console.log(event.target.id);
+          console.log(data.message[parseInt(event.target.id)].name);
+          console.log(data.message[parseInt(event.target.id)].email);
+
+          document.getElementById('cust_lat_dir').value = data.message[parseInt(event.target.id)].latitude;
+          document.getElementById('cust_lon_dir').value = data.message[parseInt(event.target.id)].longitude;
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+          } else {
+              alert("Geolocation is not supported by this browser.");
+          }
+
+          function showPosition(position) {
+            document.getElementById('m_lat').value = position.coords.latitude;
+            document.getElementById('m_lon').value = position.coords.longitude;
+            document.getElementById('c_lat').value = '11.004556';
+            document.getElementById('c_lon').value = '76.961632';
+
+            document.getElementById("direction_form").submit();
+
+          }
+
+      }
+
+      function check_for_googlemaps() {
+
+        if('{{maps_url}}' != 'None') {
+          window.open(`{{maps_url|safe}}`);
+        }
+
+      }
+
+
+      var wow = new WOW(
+        {
+          boxClass:     'wow',      // animated element css class (default is wow)
+          animateClass: 'animate__animated', // animation css class (default is animated)
+          offset:       0,          // distance to the element when triggering the animation (default is 0)
+          mobile:       true,       // trigger animations on mobile devices (default is true)
+          live:         true,       // act on asynchronously loaded content (default is true)
+          callback:     function(box) {
+            // the callback is fired every time an animation is started
+            // the argument that is passed in is the DOM node being animated
+          },
+          scrollContainer: null // optional scroll container selector, otherwise use window
+        }
+      );
+      wow.init();
+
+    </script>
+
+<script>
+  document.getElementById("stars").innerHTML = getStars({{avg_rating}});
+
+  function getStars(rating) {
+
+    // Round to nearest half
+    rating = Math.round(rating * 2) / 2;
+    let output = [];
+
+    // Append all the filled whole stars
+    for (var i = rating; i >= 1; i--)
+      output.push('<i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+    // If there is a half a star, append it
+    if (i == .5) output.push('<i class="fa fa-star-half-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+    // Fill the empty stars
+    for (let i = (5 - rating); i >= 1; i--)
+      output.push('<i class="fa fa-star-o" aria-hidden="true" style="color: gold;"></i>&nbsp;');
+
+    return output.join('');
+
+  }
+
+</script>
+
+  </body>
+</html>
+
+{% endblock %}

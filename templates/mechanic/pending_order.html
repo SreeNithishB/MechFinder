@@ -1,0 +1,167 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <title>pending orders | MechFinder</title>
+
+  <style>
+    #cancel-btn {
+      margin-right: 7px;
+      border-radius: 0;
+    }
+    #direction-btn {
+      margin-left: 7px;
+      border-radius: 0;
+    }
+    #finish-btn {
+      float: right;
+      border-radius: 0;
+    }
+    #direction_form {
+      display: none;
+    }
+    #cancel_order_form {
+      display: none;
+    }
+    #finish_order_form {
+      display: none;
+    }
+  </style>
+
+  </head>
+  <body onload="check_for_googlemaps()">
+    <div style="margin-bottom:30px;" class="shadow-lg p-3 mb-10 bg-white rounded wow animate__fadeIn">
+      <h5> Hi, {{fullname}}! You've (1) Pending order(s) 🔔</h5>
+    </div>
+
+    <form id="direction_form" action="" method="post">
+        {% csrf_token %}
+        {{ direction_form }}
+    </form>
+    <form id="cancel_order_form" action="" method="post">
+        {% csrf_token %}
+        {{ cancel_order_form }}
+    </form>
+    <form id="finish_order_form" action="" method="post">
+        {% csrf_token %}
+        {{ finish_order_form }}
+        <label for="is_order_finished"></label>
+        <input type="text" name="is_order_finished" id="is_order_finished">
+    </form>
+
+    <div class="container">
+      <div class="shadow-lg p-3 mb-5 bg-white rounded wow animate__fadeIn">
+        <h5>{{ pending_requests.customer_name }} | {{ pending_requests.customer_email }}</h5>
+        {{ pending_requests.customer_description }}
+
+        <br>
+        <br>
+        <p>+91 {{ pending_requests.customer_contact_no }}</p>
+        <button type="button" id="cancel-btn" class="btn btn-outline-danger" onClick="cancel_order()" name="cancel_btnn">Cancel Order</button>
+        <button type="button" id="direction-btn" class="btn btn-outline-success" onClick="get_directions()" name="directions_btn">Get Live Directions</button>
+        <button type="button" id="finish-btn" class="btn btn-outline-danger" onClick="finish_order()" name="finish_btn">Finish Order</button>
+      </div>
+    </div>
+    <div class="container">
+      {{ map|safe }}
+    </div>
+
+
+  <script type="text/javascript">
+    function get_directions()
+    {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+          alert("Geolocation is not supported by this browser.");
+      }
+
+      function showPosition(position) {
+        document.getElementById('m_lat').value = position.coords.latitude;
+        document.getElementById('m_lon').value = position.coords.longitude;
+        document.getElementById('c_lat').value = '{{ pending_requests.customer_latitude }}';
+        document.getElementById('c_lon').value = '{{ pending_requests.customer_longitude }}';
+
+        document.getElementById("direction_form").submit();
+      }
+    }
+
+    function check_for_googlemaps() {
+
+      if('{{maps_url}}' != 'None') {
+        window.open(`{{maps_url|safe}}`);
+      }
+
+    }
+
+    function cancel_order()
+    {
+      document.getElementById('customer_name_CancelOrderForm').value = '{{ pending_requests.customer_name }}';
+      document.getElementById('mechanic_name_CancelOrderForm').value = '{{ pending_requests.mechanic_name }}';
+      document.getElementById('email_CancelOrderForm').value = '{{ pending_requests.email }}';
+      document.getElementById('customer_email_CancelOrderForm').value = '{{ pending_requests.customer_email }}';
+      document.getElementById('contact_no_CancelOrderForm').value = '{{ pending_requests.contact_no }}';
+      document.getElementById('customer_contact_no_CancelOrderForm').value = '{{ pending_requests.customer_contact_no }}';
+      document.getElementById('customer_description_CancelOrderForm').value = '{{ pending_requests.customer_description }}';
+      document.getElementById('latitude_CancelOrderForm').value = '{{ pending_requests.latitude }}';
+      document.getElementById('longitude_CancelOrderForm').value = '{{ pending_requests.longitude }}';
+      document.getElementById('customer_latitude_CancelOrderForm').value = '{{ pending_requests.customer_latitude }}';
+      document.getElementById('customer_longitude_CancelOrderForm').value = '{{ pending_requests.customer_longitude }}';
+
+      document.getElementById('cancel_order_form').submit()
+    }
+
+    function finish_order()
+    {
+      document.getElementById('is_order_finished').value = 'YES';
+      document.getElementById('customer_name_FinishOrderForm').value = '{{ pending_requests.customer_name }}';
+      document.getElementById('mechanic_name_FinishOrderForm').value = '{{ pending_requests.mechanic_name }}';
+      document.getElementById('email_FinishOrderForm').value = '{{ pending_requests.email }}';
+      document.getElementById('customer_email_FinishOrderForm').value = '{{ pending_requests.customer_email }}';
+      document.getElementById('contact_no_FinishOrderForm').value = '{{ pending_requests.contact_no }}';
+      document.getElementById('customer_contact_no_FinishOrderForm').value = '{{ pending_requests.customer_contact_no }}';
+      document.getElementById('customer_description_FinishOrderForm').value = '{{ pending_requests.customer_description }}';
+      document.getElementById('latitude_FinishOrderForm').value = '{{ pending_requests.latitude }}';
+      document.getElementById('longitude_FinishOrderForm').value = '{{ pending_requests.longitude }}';
+      document.getElementById('customer_latitude_FinishOrderForm').value = '{{ pending_requests.customer_latitude }}';
+      document.getElementById('customer_longitude_FinishOrderForm').value = '{{ pending_requests.customer_longitude }}';
+
+      document.getElementById('finish_order_form').submit()
+    }
+
+
+
+
+
+    var wow = new WOW(
+      {
+        boxClass:     'wow',      // animated element css class (default is wow)
+        animateClass: 'animate__animated', // animation css class (default is animated)
+        offset:       0,          // distance to the element when triggering the animation (default is 0)
+        mobile:       true,       // trigger animations on mobile devices (default is true)
+        live:         true,       // act on asynchronously loaded content (default is true)
+        callback:     function(box) {
+          // the callback is fired every time an animation is started
+          // the argument that is passed in is the DOM node being animated
+        },
+        scrollContainer: null // optional scroll container selector, otherwise use window
+      }
+    );
+    wow.init();
+  </script>
+
+  </body>
+</html>
+
+{% endblock %}

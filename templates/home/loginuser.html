@@ -1,0 +1,128 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<!DOCTYPE Html>
+<html>
+
+<head>
+
+<title>Login</title>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
+
+<style type="text/css">
+
+body{
+  background-color:#FDF2E9
+}
+h1{
+  color:orange;
+}
+
+#error{
+  font-size: 16px;
+  color:red;
+}
+
+#maindiv{
+  background-color:#EBDEF0;
+  border-radius:10px;
+  padding:8px;
+  border:1px violet solid;
+  margin:50px 0px 20px 0px;
+  width:500px;
+  height:auto;
+}
+#indiv{
+  margin:30px;
+}
+
+#mutedtext{
+  top:50px;
+}
+
+#signupbtn a:hover{
+  color:green;
+  text-decoration:none;
+}
+
+
+@media only screen and (max-width: 500px) {
+
+  #maindiv{
+    background-color:#EBDEF0;
+    border-radius:10px;
+    padding:8px;
+    border:1px violet solid;
+    margin:20px 0px;
+    width:auto;
+    height:auto;
+  }
+
+  #indiv{
+    margin:20px 0px;
+  }
+
+  lable{
+    width:90%;
+    padding-left:0;
+    margin-left: 0;
+    display:inline-block;
+    text-align:right;
+  }
+
+  #formdiv{
+    background-color:#e6e6e6;
+    padding: 20px 0px;
+    margin: 20px 0px;
+    width:auto;
+    border-radius:15px;
+  }
+
+}
+
+
+</style>
+
+</head>
+<body>
+
+
+<center>
+  <div id="maindiv">
+  <h1>Login</h1>
+  <p id="error">{{ error }}</p>
+  <form method="POST" action="" >
+  {% csrf_token %}
+
+  <div  id="indiv">
+    <fieldset class="form-group">
+      <p>User name  : {{ form.username }}</p>
+    </fieldset>
+    <p>Password       : {{ form.password }}</p>
+    <small class="text-muted" id="mutedtext">We will never share your username and password with anyone</small>
+
+  </div>
+
+<p><button type="submit" id="subbut" name="submitbutton" class="btn btn-primary">Login</button></p>
+
+  </form>
+
+
+  </div>
+  <h2 id="signupbtn"><a href="{% url 'signupuser' %}">Sign Up</a></h2>
+
+</center>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+
+</body>
+
+</html>
+{% endblock  %}

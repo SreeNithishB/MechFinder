@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<h1>Welcome {{ username }}
+  {% if error %} ,{{ error }} {% endif %}</h1>
+
+<p>First Name : {{ name.firstname }}</p>
+
+<p>Last Name : {{ name.lastname }}</p>
+
+<p>Are you mechanic :
+  {% if name.isMech %}Yes
+  {% else %}No
+  {% endif %}
+
+</p>
+
+<p>Email address : {{ name.email }}</p>
+
+
+{% endblock %}
