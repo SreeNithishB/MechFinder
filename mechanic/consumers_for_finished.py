@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from channels.generic.websocket import WebsocketConsumer
 
+"""list of all the instances of users logged in"""
 instances = []
 
 class WSConsumer(WebsocketConsumer):
@@ -22,11 +23,13 @@ class WSConsumer(WebsocketConsumer):
 
         global instances
 
+        """removing the user from the instance once they're logged out or the
+        connection is closed"""
         instances.remove(self)
 
         self.close()
 
-
+"""listening for changes in database to pass it through websockets"""
 @receiver(post_save, sender=helps_finished)
 @receiver(post_delete, sender=helps_finished)
 def get_model_objects(sender, **kwargs):

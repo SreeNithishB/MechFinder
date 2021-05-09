@@ -1,11 +1,13 @@
 from django import forms
 
+"""Forms to calculate route using google maps"""
 class DirectionForm(forms.Form):
     m_lat = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'m_lat'}))
     m_lon = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'m_lon'}))
     c_lat = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'c_lat'}))
     c_lon = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'c_lon'}))
 
+"""Forms to collect data to be stored in helps_received database"""
 class HelpsReceivedForm(forms.Form):
     customer_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_name_HelpsReceivedForm'}))
     mechanic_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'mechanic_name_HelpsReceivedForm'}))
@@ -19,6 +21,7 @@ class HelpsReceivedForm(forms.Form):
     customer_latitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_latitude_HelpsReceivedForm'}))
     customer_longitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_longitude_HelpsReceivedForm'}))
 
+"""Forms to collect the details about the order to be cancelled and rebroadcasted"""
 class CancelOrderForm(forms.Form):
     customer_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_name_CancelOrderForm'}))
     mechanic_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'mechanic_name_CancelOrderForm'}))
@@ -32,6 +35,7 @@ class CancelOrderForm(forms.Form):
     customer_latitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_latitude_CancelOrderForm'}))
     customer_longitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_longitude_CancelOrderForm'}))
 
+"""Forms to collect the details of orders to be finished"""
 class FinishOrderForm(forms.Form):
     customer_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_name_FinishOrderForm'}))
     mechanic_name = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'mechanic_name_FinishOrderForm'}))
@@ -44,4 +48,3 @@ class FinishOrderForm(forms.Form):
     longitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'longitude_FinishOrderForm'}))
     customer_latitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_latitude_FinishOrderForm'}))
     customer_longitude = forms.CharField(label='', max_length=100, widget= forms.TextInput(attrs={'id':'customer_longitude_FinishOrderForm'}))
-    

@@ -1,5 +1,5 @@
 
-
+"""utility function to calculate url of google maps with pre setted source and destination with get method"""
 def get_googlemaps_direction_url(o_lat, o_lng, d_lat, d_lng):
     def convert_dd_to_dms_for_lat(decdegrees):
         degrees = int(decdegrees)
