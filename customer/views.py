@@ -12,10 +12,11 @@ import folium
 from home.forms import FeedbackModelForm
 from home.models import Feedback
 
-# Create your views here.
+
 
 @login_required
 def index(request):
+    """redirecting non-authorized users to their respective pages"""
     try:
         user_obj = get_object_or_404(UserProfile, pk = request.user.id, user=request.user)
         if user_obj.isMech:
@@ -23,9 +24,9 @@ def index(request):
     except:
         return redirect('/customer')
 
-    # Getting Feedback from customer
     if request.method == 'POST':
         try:
+            """checking whether the post request is comming from the feedback page"""
             if request.POST['is_feedback'] == "YES":
                 feedback_details = request.POST
                 feedback = Feedback()
@@ -35,14 +36,19 @@ def index(request):
                 feedback.customer_email = feedback_details['customer_email']
                 feedback.contact_no = feedback_details['contact_no']
                 feedback.customer_contact_no = feedback_details['customer_contact_no']
-                # md5 hash for babydevs: f6181436f8f6cd84ea56293b424a53c8
+                """md5 hash for babydevs: f6181436f8f6cd84ea56293b424a53c8
+                   This hash value is used to check wether the feedback is already given or not by the user"""
                 feedback.message = "f6181436f8f6cd84ea56293b424a53c8"
                 feedback.save()
 
-                # updating as the feedback is given
-                hf_count = helps_finished.objects.filter(customer_name=feedback_details['customer_name'], mechanic_name=feedback_details['mechanic_name'], is_feedback_given=False).count()
+                """updating as the feedback is given"""
+                hf_count = helps_finished.objects.filter(customer_name=feedback_details['customer_name'],
+                                                        mechanic_name=feedback_details['mechanic_name'],
+                                                        is_feedback_given=False).count()
                 if hf_count > 0:
-                    hf = hf_count = helps_finished.objects.filter(customer_name=feedback_details['customer_name'], mechanic_name=feedback_details['mechanic_name'], is_feedback_given=False).first()
+                    hf = hf_count = helps_finished.objects.filter(customer_name=feedback_details['customer_name'],
+                                                                mechanic_name=feedback_details['mechanic_name'],
+                                                                is_feedback_given=False).first()
                     hf.is_feedback_given = True
                     hf.save()
 
@@ -53,7 +59,9 @@ def index(request):
 
     if request.method == 'POST':
         try:
+            """checking whether the post request is comming from the cancelation of the request"""
             if request.POST['cancel_request'] == 'YES':
+                """removing duplicated request if any"""
                 try:
                     obj_count = need_help.objects.filter(user_name=request.user.username).count()
                     for i in range(0, obj_count):
@@ -65,6 +73,7 @@ def index(request):
         except:
             pass
 
+    """restricting the cancellation feature if the order was already accepted"""
     display_cancel_btn = 'none'
     try:
         obj_count = need_help.objects.filter(user_name=request.user.username).count()
@@ -74,6 +83,8 @@ def index(request):
         display_cancel_btn = 'none'
 
     if request.method == 'POST':
+        """saving the request of the customer in need_help database, for it to be
+           reflected on mechanics dashboard"""
         need_help_instance = need_help()
         need_help_instance.name = request.POST['name']
         need_help_instance.user_name = request.POST['user_name']
@@ -84,10 +95,6 @@ def index(request):
         need_help_instance.longitude = request.POST['longitude']
         need_help_instance.save()
 
-    print("----->   ", request.user.username)
-    print("----->   ", request.user.id)
-
-
     name = get_object_or_404(UserProfile, pk = request.user.id, user=request.user)
     fullname = get_object_or_404(UserProfile, pk = request.user.id, user=request.user).firstname + ' ' + get_object_or_404(UserProfile, pk = request.user.id, user=request.user).lastname
     email = get_object_or_404(UserProfile, pk = request.user.id, user=request.user).email
@@ -97,18 +104,12 @@ def index(request):
     ask_help_form = AskHelpForm(request.POST or None)
     get_details_for_feedback = GetDetailsForFeedback(request.POST or None)
 
-
-    # initial values
-    # l_lat = '33.8688'
-    # l_lon = '151.2093'
-    # m = folium.Map(width=800, height=500, location=[l_lat, l_lon], zoom_start=8)
-    # folium.Marker([l_lat, l_lon], tooltip="click here for more", popup="Hey!",
-    #                 icon=folium.Icon(color='purple')).add_to(m)
-
+    """Folium Map for customers live location"""
     m = None
 
     if form.is_valid():
 
+        """saving the current location of the users"""
         try:
             user_location_obj = Location.objects.filter(user_name=request.user.username).first()
         except:
@@ -132,44 +133,45 @@ def index(request):
         l_lat = instance.latitude
         l_lon = instance.longitude
 
-        # initial folium map
+        """initial folium map"""
         m = folium.Map(width=800, height=500, location=[l_lat, l_lon], zoom_start=8)
 
-        # location Marker
+        """location Marker"""
         folium.Marker([l_lat, l_lon], tooltip="click here for more info", popup=[l_lat, l_lon],
                         icon=folium.Icon(color='purple')).add_to(m)
 
         m = m._repr_html_()
 
+    """restricting user to send more than one request at a time"""
     is_any_request_sent = False
     try:
         current_requests = helps_received.objects.filter(customer_name=request.user.username).count()
         if current_requests > 0:
             is_any_request_sent = True
-        print('is_any_request_sent: ', is_any_request_sent, current_requests)
+
     except:
         current_requests = None
         is_any_request_sent = False
-        print('is_any_request_sent: ', is_any_request_sent, current_requests)
 
     if not is_any_request_sent:
         try:
             current_requests = need_help.objects.filter(user_name=request.user.username).count()
             if current_requests > 0:
                 is_any_request_sent = True
-            print('is_any_request_sent: ', is_any_request_sent, current_requests)
+
         except:
             current_requests = None
             is_any_request_sent = False
-            print('is_any_request_sent: ', is_any_request_sent, current_requests)
 
 
     if m or is_any_request_sent:
+        """fetching customer's current location"""
         try:
             user_location_obj = Location.objects.filter(user_name=request.user.username).first()
         except:
             user_location_obj = None
 
+        """if the customer's current location is available, provide them with a folium map"""
         if not m and user_location_obj:
             l_lat = user_location_obj.latitude
             l_lon = user_location_obj.longitude

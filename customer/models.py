@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+"""storing current location of the users temporarily"""
 class Location(models.Model):
     user_name = models.CharField(max_length=200)
     latitude = models.CharField(max_length=200)
@@ -11,6 +12,8 @@ class Location(models.Model):
     def __str__(self):
         return f"{self.latitude},{self.longitude}"
 
+"""The acutal model that connects both the mechanic and the customer, also
+   used to retrive oreder in pending order dashboard"""
 class helps_received(models.Model):
     customer_name = models.CharField(max_length=200)
     mechanic_name = models.CharField(max_length=200)
@@ -29,6 +32,7 @@ class helps_received(models.Model):
     def __str__(self):
         return str(self.customer_name)
 
+    """passing the object values to customer's page through websockets"""
     def get_all_objects(self):
         queryset = self._meta.model.objects.all().values('avg_rating', 'mechanic_name', 'customer_name', 'email', 'customer_email', 'contact_no', 'customer_contact_no', 'latitude', 'customer_latitude', 'longitude', 'customer_longitude')
         # can use the below method also
