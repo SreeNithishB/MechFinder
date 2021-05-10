@@ -13,7 +13,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>contact form by Srinidh</title>
+    <title>MechFinder</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/floating-labels/">
 
@@ -36,36 +36,58 @@
           font-size: 3.5rem;
         }
       }
+        body {
+
+  background-color: antiquewhite
+
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  margin: auto;
+  align-items: center;
+  /* background-color: antiquewhite; */
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+  align-items: center;
+  /* background-color: antiquewhite; */
+
+}
+.new{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: antiquewhite;
+  /* padding-left: 40%; */
+
+}
     </style>
     <!-- Custom styles for this template -->
-    <link href="{% static 'home/main.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'home/main.css' %}" rel="stylesheet"> -->
   </head>
   <body>
-    <center>
 
-    <form action="" class="form-signin" method="POST">
+<div class="new">
+  <form action="" class="form-signin" method="POST">
     {% csrf_token %}
 
   <div class="text-center mb-4">
     <img class="mb-4" src="{% static 'home/Logo.png' %}" alt="" width="450" height="300">
     <h1 class="h3 mb-3 font-weight-normal">Contact Form</h1>
-    <p> You can Write about your Problem</p>
+    <p>We'd Love to hear from you!</p>
   </div>
-  {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-success" role="alert">
-          {{message}}
-        </div>
-        {% endfor %}
-    {% endif %}
-  <div class="form-control">
+
+  <div class="">
     {{ form|crispy }}
 
-      <!-- <input type="text" id="inputName" class="form-control" placeholder="Name" required autofocus> -->
-      <!-- <label for="inputName">Name</label> -->
-
-    <!-- <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus> -->
-    <!-- <label for="inputEmail">Email address</label> -->
     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
 
     <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
@@ -76,7 +98,9 @@
 
 
 </form>
-</center>
+
+</div>
+
 </body>
 </html>
 

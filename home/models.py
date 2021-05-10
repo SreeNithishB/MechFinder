@@ -46,7 +46,7 @@ class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     rating = models.CharField(max_length = 1,choices = CHOICES, default='3')
-    message = models.CharField(max_length = 200)
+    message = models.CharField(max_length = 200, blank=True)
 
     def __str__(self):
         return self.mechanic_name + ' | ' + self.customer_name

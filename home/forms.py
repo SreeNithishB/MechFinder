@@ -40,12 +40,13 @@ class FeedbackModelForm(ModelForm):
                  )
         widgets = {
             'rating': forms.Select(choices=CHOICES,attrs={'class':'form-select'}),
-            'message': forms.Textarea(attrs={'class': 'form-control'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Optional.'}),
         }
         labels = {
             'rating': "Rating",
             'message': "Message",
         }
+        
 
 
 class ContactModelForm(ModelForm):
