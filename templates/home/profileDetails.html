@@ -25,6 +25,8 @@ body{
   background-size:cover;
   background-repeat:no-repeat;
   font-family: "Comic Sans";
+  padding-bottom:10px;
+  margin:0;
 }
 
 lable{
@@ -36,9 +38,39 @@ lable{
 #maindiv{
   background-color:#fcf5ee;
   padding:50px;
+  margin-bottom:10px;
+  padding-bottom:10px;
   width:auto;
-  border-radius:50%;
+  border-radius:10%;
   opacity:0.88;
+}
+
+@media only screen and (max-width: 500px){
+
+  #maindiv{
+    background-color:#fcf5ee;
+    padding:15px;
+    border:1px violet solid;
+    width:auto;
+    border-radius:10%;
+    opacity:0.88;
+    margin-bottom:10px;
+  }
+
+  lable{
+    width:100%;
+    display:inline-block;
+    text-align:right;
+  }
+
+  body{
+    padding-bottom:10px;
+    margin-bottom:20px;
+    background-size:cover;
+    background-repeat:no-repeat;
+    height:100%;
+  }
+
 }
 
 </style>
@@ -64,6 +96,7 @@ lable{
 
     <p><lable>First name : {{ form.firstname }}</lable></p>
     <p><lable>Last name : {{ form.lastname }}</lable></p>
+    <p style="display:none"><lable>Email id : {{ form.email }}</lable></p>
     <p><lable>Phone Number : {{ form.phone }}</lable></p>
 
     <button class="btn btn-info" type="submit">Save Changes</button>

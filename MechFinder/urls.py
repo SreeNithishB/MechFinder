@@ -31,7 +31,7 @@ urlpatterns = [
     path('services', views.services, name="services"),
     path('about', views.about, name="about"),
     path('faqs', views.faqs, name="faqs"),
-    path('contact', views.contact, name="contact"),
+    path('contact/', views.contact, name="contact"),
     path('feedback', views.feedback, name="feedback"),
 
 ]
